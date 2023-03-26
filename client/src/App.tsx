@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FormEvent, FormEventHandler, useEffect, useState } from 'react'
 
 enum Type {
 	MOVIE = 'movie',
@@ -64,33 +64,51 @@ class Anime {
 }
 
 const AnimeCard = ({anime}: {anime: Anime}) => {
+
 	return (<div className='anime-card'>
-		<img src={`https://image.tmdb.org/t/p/w500/${anime.posterURL}`} alt="" />
-		<h4> {anime.title} </h4>
+		{ anime.posterURL && <img src={`https://image.tmdb.org/t/p/w500/${anime.posterURL}`} alt="" />}
+		<h3> {anime.title} </h3>
 	</div>)
 }
 
 function App() {
 
-	const [search, setSearch] = useState('Naruto')
+	const [search, setSearch] = useState('')
 	const [results, setResults] = useState<ISearchResult[]>([]);
 
+	function sortBy <T>(arr: T[], category: keyof T): T[] {
+		return arr.sort( (a, b) => {
+			if (a[category] > b[category]) return -1
+			if (a[category] < b[category]) return 1
+			return 0
+		})
+	}
+
+	console.debug(results)
+
 	// send a request on page load and set the results to the json response
-	useEffect(() => {
+	const searchTMDB = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		fetch(`http://localhost:3000/search/${search}`).then( data => {
 			data.json().then( data => {
 				setResults(data.results as ISearchResult[])
 			})
 		})
-	})
+	}
 
 	return (
 		<main>
-			<section>
+
+			<form onSubmit={searchTMDB}>
+				<label htmlFor="search"></label>
+				<input id="search" type="text" value={search} onChange={e => setSearch(e.target.value)} />
+			</form>
+
+			<section className='search-results'>
 
 			{/* Map through the results and display them */}
 			{
-				results.map( (result: any) => <AnimeCard anime={new Anime(result)} />	)
+				sortBy(results, 'popularity').map( (result: any) => <AnimeCard anime={new Anime(result)} />	)
 			}
 
 			</section>
