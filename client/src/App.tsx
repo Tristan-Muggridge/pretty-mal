@@ -2,12 +2,15 @@ import { useState } from 'react'
 
 function App() {
 
-  fetch('http://localhost:3000').then( data => {
-    console.log( data.json());
+  fetch('http://localhost:3000/search/naruto').then( data => {
+    data.json().then( data => {
+      console.log(data)
+    })
   })
 
   return (
     <main>
+
 
     </main>
   )
