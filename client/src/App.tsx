@@ -1,97 +1,131 @@
 import { FormEvent, useEffect, useState } from 'react'
 
+const headers = {'Content-Type': 'application/json'};
+
 enum Type {
 	MOVIE = 'movie',
 	TV = 'tv'
 }
 
-interface ISearchResult {
-	id: string
-	title: string
-	name: string
-	original_title: string
-	original_name: string
-	poster_path: string
-	backdrop_path: string
-	first_air_date: string
-	overview: string
-	media_type: Type
-	adult: boolean
-	genre_ids: number[]
-	vote_average: number
-	vote_count: number
-	popularity: number
+enum Seasons {
+	"spring" = "Spring",
+	"summer" = "Summer",
+	"fall" = "Fall",
+	"winter" = "Winter"
+}
+
+interface IMain_Picture {
+	large: string;
+	medium: string;
+}
+
+interface IAlternative_Titles {
+	synonyms: string[];
+	en: string;
+	ja: string;
+}
+
+interface IGenre {
+	id: number;
+	name: string;
+}
+
+interface IBroadcast {
+	day_of_the_week: string;
+	start_time: string;
+}
+
+interface IStudio {
+	id: number;
+	name: string;
+}
+
+interface IMALSearchResult {
+	id: number,
+	title: string,
+	main_picture: IMain_Picture,
+	alternative_titles: IAlternative_Titles,
+	start_date: string,
+	end_date: string,
+	synopsis: string,
+	mean: number,
+	rank: number,
+	popularity: number,
+	num_list_users: number,
+	num_scoring_users: number,
+	nsfw: string,
+	created_at: string,
+	updated_at: string,
+	media_type: string,
+	status: string,
+	genres: IGenre[],
+	my_list_status: string,
+	num_episodes: number,
+	start_season: string,
+	broadcast: IBroadcast,
+	source: string,
+	average_episode_duration: number,
+	rating: string,
+	// pictures: any,
+	// background: any,
+	// related_anime,
+	// related_manga,
+	// recommendations,
+	studios: IStudio,
+	// statistics
 }
 
 class Anime {
-	id: string
-	title: string
-	originalTitle: string
+	id: number;
+	title: string;
+	alternativeTitles: IAlternative_Titles;
 	
-	posterURL: string
-	backdropURL: string
-
-	releaseDate: string
-	overview: string
-
-	type: Type
-	adult: boolean
-	genres: number[]
+	posterURL: IMain_Picture;
+	genres: IGenre[];
+	synopsis: string;
+	score: number;
 	
-	voteAverage: number
-	voteCount: number
-	popularity: number
+	duration: number;
+	episodeCount: number;
+	
+	studios: IStudio;
+	
+	rank: number;
+	nsfw: string;
+	source: string;
 
-	constructor(json: ISearchResult) {
-		this.id = json['id'] ?? undefined
-		this.title = json['title'] ?? json["name"] ?? undefined ?? undefined
-		this.originalTitle = json['original_title'] ?? json["original_name"] ?? undefined
-
-		this.posterURL = json['poster_path'] ?? undefined
-		this.backdropURL = json['backdrop_path'] ?? undefined
-
-		this.releaseDate = json['first_air_date'] ?? undefined
-		this.overview = json['overview'] ?? undefined
-
-		this.type = json['media_type'] ?? undefined
-		this.adult = json['adult'] ?? undefined
-		this.genres = json['genre_ids'] ?? undefined
-
-		this.voteAverage = json['vote_average'] ?? undefined
-		this.voteCount = json['vote_count'] ?? undefined
-		this.popularity = json['popularity'] ?? undefined
+	constructor(data: IMALSearchResult) {		
+		this.id = data.id;
+		this.title = data.title;
+		this.alternativeTitles = data.alternative_titles ?? [];
+		this.posterURL = data.main_picture;
+		this.genres = data.genres;
+		this.synopsis = data.synopsis;
+		this.score = data.mean;
+		this.duration = data.average_episode_duration;
+		this.episodeCount = data.num_episodes;
+		this.studios = data.studios;
+		this.rank = data.rank;
+		this.nsfw = data.nsfw;
+		this.source = data.source;
 	}
+
 }
 
 const AnimeCard = ({anime}: {anime: Anime}) => {
-
-	// assign the providers to a variable
-
-
-	const getProviders = async () => {
-		const request = await fetch(`http://localhost:3000/providers/${anime.type}/${anime.id}`)
-				.then( response => response.json())
-				.then( data => data.results)
-		return request	
-	}
-
-	return (<div className='anime-card'>
-		{ anime.posterURL && <img src={`https://image.tmdb.org/t/p/w500/${anime.posterURL}`} alt="" />}
-		<h3> {anime.title} </h3>
-		<div className='providers'>
-		{/* {
-			providers && providers["AU"] && providers["AU"]["flatrate"] 
-			? providers["AU"]["flatrate"].map((flatrate:any) => <img className='service-logo' src={`https://image.tmdb.org/t/p/w500/${flatrate.logo_path}`}></img>)
-			: ''
-		} */}
+	return (
+		<div className='anime-card'>
+				{ anime.posterURL && <img src={`https://image.tmdb.org/t/p/w500/${anime.posterURL}`} alt="" />}
+				<h3> {anime.title} </h3>
+				<div className='providers'>
+			</div>
 		</div>
-	</div>)
-}
+)}
 
 function App() {
 
 	const [search, setSearch] = useState('')
-	const [results, setResults] = useState<ISearchResult[]>([]);
+	const [results, setResults] = useState<IMALSearchResult[]>([]);
 
 	function sortBy <T>(arr: T[], category: keyof T): T[] {
 		return arr.sort( (a, b) => {
@@ -103,9 +137,12 @@ function App() {
 
 	const searchMAL = async (e: FormEvent) => {
 		e.preventDefault()
-		// const request = await fetch(`http://localhost:3000/search/${search}`)
 
-		const request = await fetch(`http://localhost:3000/test`)
+		const request = await fetch(`http://localhost:3000/season`, {
+			method: 'post', 
+			body: JSON.stringify({year: 2023, season: "winter"}), 
+			headers: headers
+		})
 
 		const json = await request.json();
 
@@ -113,8 +150,9 @@ function App() {
 
 		if (error) console.error(error);
 		if (isLoading) console.log('Loading...');
-		
-		console.debug(data);
+
+		setResults( () => data.map( (result: {node: IMALSearchResult}) => new Anime(result.node)));
+		console.debug(results)
 	}
 
 	return (
@@ -129,7 +167,7 @@ function App() {
 
 			{/* Map through the results and display them */}
 			{
-				sortBy(results, 'popularity').map( (result: any) => <AnimeCard anime={new Anime(result)} />	)
+				results.map( (result: any) => <AnimeCard anime={new Anime(result)} />	)
 			}
 
 			</section>
