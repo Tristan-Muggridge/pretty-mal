@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {json} from 'express';
 import cors from 'cors';
 import dotenv from "dotenv";
 
@@ -12,6 +12,8 @@ const corsOption = {
 }
 
 app.use(cors(corsOption));
+app.use(json())
+app.use(express.urlencoded({ extended: true }))
 
 const porArg = process.argv.find(arg => arg.startsWith('--port='));
 if (porArg) {
@@ -45,9 +47,11 @@ app.get('/search/:searchQuery', async (req: express.Request, res: express.Respon
     res.send(await grabInfoFromDB());
 })
 
-app.get('/test', async (req: express.Request, res: express.Response) => {
+app.post('/season', async (req: express.Request, res: express.Response) => {
 
-    const request = await fetch(`https://api.myanimelist.net/v2/anime/season/2017/summer?limit=4`, {headers: MALHeaders, method: 'get'})
+    const {year, season} = req.body;
+
+    const request = await fetch(`https://api.myanimelist.net/v2/anime/season/${year}/${season}?limit=25&fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics&nsfw=true`, {headers: MALHeaders, method: 'get'})
     const data = await request.json();
 
     res.send(data);
