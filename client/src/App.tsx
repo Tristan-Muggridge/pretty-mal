@@ -101,23 +101,26 @@ function App() {
 		})
 	}
 
-	console.debug(results)
+	const searchMAL = async (e: FormEvent) => {
+		e.preventDefault()
+		// const request = await fetch(`http://localhost:3000/search/${search}`)
 
-	// send a request on page load and set the results to the json response
-	const searchTMDB = (e: FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+		const request = await fetch(`http://localhost:3000/test`)
+
+		const json = await request.json();
+
+		const {data, error, isLoading} = json;
+
+		if (error) console.error(error);
+		if (isLoading) console.log('Loading...');
 		
-		fetch(`http://localhost:3000/search/${search}`).then( data => {
-			data.json().then( data => {
-				setResults(()=>data.results as ISearchResult[])
-			})
-		})
+		console.debug(data);
 	}
 
 	return (
 		<main>
 
-			<form onSubmit={searchTMDB}>
+			<form onSubmit={searchMAL}>
 				<label htmlFor="search"></label>
 				<input id="search" type="text" value={search} onChange={e => setSearch(e.target.value)} />
 			</form>

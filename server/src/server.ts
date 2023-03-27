@@ -31,7 +31,7 @@ app.get('/', (req: express.Request, res: express.Response) => {
     
 })
 
-const sendResponse = (res: express.Response, data: any) => {console.debug(data); res.send(data)}
+const MALHeaders = { 'X-MAL-Client-ID': process.env.MAL_CLIENT_ID };
 
 app.get('/search/:searchQuery', async (req: express.Request, res: express.Response) => {
     
@@ -42,19 +42,22 @@ app.get('/search/:searchQuery', async (req: express.Request, res: express.Respon
         )).json();
     }
 
-    sendResponse(res, await grabInfoFromDB());
+    res.send(await grabInfoFromDB());
 })
+
+app.get('/test', async (req: express.Request, res: express.Response) => {
+
+    const request = await fetch(`https://api.myanimelist.net/v2/anime/season/2017/summer?limit=4`, {headers: MALHeaders, method: 'get'})
+    const data = await request.json();
+
+    res.send(data);
+});
 
 app.get('/providers/:type/:id', async (req: express.Request, res: express.Response) => {
     
-    const grabInfoFromDB = async () =>{
-        return await ( await fetch(
-            `https://api.themoviedb.org/3/${req.params.type}/${req.params.id}/watch/providers?api_key=${process.env.TMDB_V3_KEY}`,
-            { method: 'get', headers: {contentType: 'application/json'} }
-        )).json();
-    }
+    
 
-    sendResponse(res, await grabInfoFromDB());
+    // res.send(await grabInfoFromDB());
 })
 
 app.listen(port, () => {

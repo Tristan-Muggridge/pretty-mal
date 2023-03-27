@@ -28,18 +28,20 @@ app.get('/', (req, res) => {
         }).catch(error => res.send(error));
     }).catch(error => res.send(error));
 });
-const sendResponse = (res, data) => { console.debug(data); res.send(data); };
+const MALHeaders = { 'X-MAL-Client-ID': process.env.MAL_CLIENT_ID };
 app.get('/search/:searchQuery', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const grabInfoFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
         return yield (yield fetch(`https://api.themoviedb.org/3/search/multi?api_key=${process.env.TMDB_V3_KEY}&language=en-US&page=1&include_adult=false&query=${req.params["searchQuery"]}`, { method: 'get', headers: { contentType: 'application/json' } })).json();
     });
-    sendResponse(res, yield grabInfoFromDB());
+    res.send(yield grabInfoFromDB());
+}));
+app.get('/test', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const request = yield fetch(`https://api.myanimelist.net/v2/anime/season/2017/summer?limit=4`, { headers: MALHeaders, method: 'get' });
+    const data = yield request.json();
+    res.send(data);
 }));
 app.get('/providers/:type/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const grabInfoFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield (yield fetch(`https://api.themoviedb.org/3/${req.params.type}/${req.params.id}/watch/providers?api_key=${process.env.TMDB_V3_KEY}`, { method: 'get', headers: { contentType: 'application/json' } })).json();
-    });
-    sendResponse(res, yield grabInfoFromDB());
+    // res.send(await grabInfoFromDB());
 }));
 app.listen(port, () => {
     console.log(`Server is running on localhost: ${port}`);
