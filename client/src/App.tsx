@@ -1,4 +1,4 @@
-import { FormEvent, FormEventHandler, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 
 enum Type {
 	MOVIE = 'movie',
@@ -65,9 +65,26 @@ class Anime {
 
 const AnimeCard = ({anime}: {anime: Anime}) => {
 
+	// assign the providers to a variable
+
+
+	const getProviders = async () => {
+		const request = await fetch(`http://localhost:3000/providers/${anime.type}/${anime.id}`)
+				.then( response => response.json())
+				.then( data => data.results)
+		return request	
+	}
+
 	return (<div className='anime-card'>
 		{ anime.posterURL && <img src={`https://image.tmdb.org/t/p/w500/${anime.posterURL}`} alt="" />}
 		<h3> {anime.title} </h3>
+		<div className='providers'>
+		{/* {
+			providers && providers["AU"] && providers["AU"]["flatrate"] 
+			? providers["AU"]["flatrate"].map((flatrate:any) => <img className='service-logo' src={`https://image.tmdb.org/t/p/w500/${flatrate.logo_path}`}></img>)
+			: ''
+		} */}
+		</div>
 	</div>)
 }
 
@@ -89,9 +106,10 @@ function App() {
 	// send a request on page load and set the results to the json response
 	const searchTMDB = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		
 		fetch(`http://localhost:3000/search/${search}`).then( data => {
 			data.json().then( data => {
-				setResults(data.results as ISearchResult[])
+				setResults(()=>data.results as ISearchResult[])
 			})
 		})
 	}
