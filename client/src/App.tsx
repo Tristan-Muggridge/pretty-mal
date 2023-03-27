@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 const headers = {'Content-Type': 'application/json'};
 
@@ -80,7 +80,7 @@ class Anime {
 	title: string;
 	alternativeTitles: IAlternative_Titles;
 	
-	posterURL: IMain_Picture;
+	main_picture: IMain_Picture;
 	genres: IGenre[];
 	synopsis: string;
 	score: number;
@@ -94,11 +94,11 @@ class Anime {
 	nsfw: string;
 	source: string;
 
-	constructor(data: IMALSearchResult) {		
+	constructor(data: IMALSearchResult) {				
 		this.id = data.id;
 		this.title = data.title;
 		this.alternativeTitles = data.alternative_titles ?? [];
-		this.posterURL = data.main_picture;
+		this.main_picture = data.main_picture;
 		this.genres = data.genres;
 		this.synopsis = data.synopsis;
 		this.score = data.mean;
@@ -109,16 +109,18 @@ class Anime {
 		this.nsfw = data.nsfw;
 		this.source = data.source;
 	}
-
 }
 
 const AnimeCard = ({anime}: {anime: Anime}) => {
 	return (
 		<div className='anime-card'>
-				{ anime.posterURL && <img src={`https://image.tmdb.org/t/p/w500/${anime.posterURL}`} alt="" />}
+				{<img src={anime.main_picture.medium} alt="" />}
 				<h3> {anime.title} </h3>
-				<div className='providers'>
-			</div>
+				<div className='card-genres'>
+				{
+					anime.genres && anime.genres.map( genre => <span key={`${anime.id}-${genre.id}`}> {genre.name} </span>)
+				}
+				</div>
 		</div>
 )}
 
@@ -152,7 +154,6 @@ function App() {
 		if (isLoading) console.log('Loading...');
 
 		setResults( () => data.map( (result: {node: IMALSearchResult}) => new Anime(result.node)));
-		console.debug(results)
 	}
 
 	return (
