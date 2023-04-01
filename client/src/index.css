@@ -1,22 +1,30 @@
 *, *::after, *::before {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 :root {
-  --color-primary: #22333B;
+  /* --color-primary: rgb(239, 239, 239);
   --color-primary-light: #F2F4F3;
   --color-primary-dark: #0A0908;
 
   --color-secondary-light: #A9927D;
-  --color-secondary-dark: #5E503F;
+  --color-secondary-dark: #5E503F; */
+
+  --white: rgb(247, 251, 252);
+  --accent-100: rgb(214, 230, 242);
+  --accent-300: rgb(185, 215, 234);
+  --accent-500: rgb(118, 159, 205);
+  --yellow: rgb(255, 221, 108);
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  line-height: 1.25;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: var(--color-primary-dark);
-  background-color: var(--color-primary);
+  color: black;
+  background-color: var(--white);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,84 +33,159 @@
   -webkit-text-size-adjust: 100%;
 }
 
+button {
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin: 0 0.5rem 0.5rem 0.5rem;
+  color: var(--white);
+  background-color: var(--accent-500);
+  font-weight: 600;
+}
+
+.btn-dark {
+  color: var(--white);
+  background-color: var(--accent-500);
+}
+.btn-dark:hover {
+  color: var(--white);
+  background-color: var(--accent-300);
+}
+
+.btn-light {
+  color: var(--accent-500);
+  background-color: var(--white);
+}
+.btn-light:hover {
+  color: var(--white);
+  background-color: var(--accent-300);
+}
+
+.transparent {
+  background-color: transparent;
+}
+
+header {width: 100%;   background-color: var(--accent-500);
+}
+nav {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  color: var(--white);
+  padding: 1rem;
+
+  margin-bottom: 2rem;
+}
+
+nav > div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 main {
-  max-width: 1140px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-.search-results {
-  margin: 2rem 0;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(200px, 1fr));
-  gap: 1rem;
+section {
+  width: 100%;
 }
 
-.anime-card {
-  max-width: 800px;
-  width: 100%;
-  padding: 1rem;
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2rem auto;
+}
+
+.custom-scroll {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.border-bottom { border-bottom: 1px solid var(--accent-500); }
+
+.card {
+  text-align: center;
   border-radius: 0.5rem;
-  background-color: var(--color-primary-light);
+  border: 0.125rem solid var(--accent-500);
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
-.anime-card img {
-  width: 100%;
-  max-height: 500px;
-  object-fit: fill;
-
-  border-radius: 0.5rem;
-  outline: var(--color-primary-dark) 0.125rem solid;
-}
-
-.anime-card h3 {
-  margin: 1rem 0;
-  font-size: 1.25rem;
-  font-weight: 600;
+.card-content h4 {
   text-align: center;
+  margin: 0.5rem auto;
+  width: 130px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-overflow: ellipsis;
 }
 
-.card-genres {
+.card-content > p {
+  height: 150px;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-y: auto;
+  padding: 0 1rem;
+}
+
+.card img {
+  min-width: 100%;
+  max-height: 200px;
+  outline: var(--accent-500) 0.125rem solid;
+}
+
+.stars {
+  color: var(--yellow);
+}
+
+.genres {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
-
-  font-size: x-small;
+  gap: 0.1rem;
 }
 
-.card-genres > span {
-  background-color: var(--color-secondary-light);
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-  color: var(--color-primary-dark);
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  background-color: var(--accent-500);
+  color: var(--white);
 }
 
-.providers {
+.scroll-horizontal {
+  margin: 0 2rem;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: start;
   gap: 1rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scroll-behavior: smooth;
 }
 
-.service-logo {
-  height: 50px;
-  max-width: 50px;
+.interactable {
+  cursor: pointer;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.interactable:focus-visible {
+  outline: var(--accent-100) 0.5rem solid;
+}
+
+.scroll-button {
+  height: 20px;
+  padding: 2rem 0.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  background-color: var(--accent-500);
 }
