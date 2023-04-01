@@ -5,7 +5,7 @@ import { getSeason } from "../types/Seasons";
 
 const headers = {'Content-Type': 'application/json'};
 
-export default function useAnime(url: string, body: object) {
+export default function useAnime(url: string, body: object | undefined = undefined) {
     const [anime, setAnime] = useState<Anime[]>([]);
 
     useEffect(() => {
