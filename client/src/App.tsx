@@ -28,7 +28,7 @@ const AnimeCard = ({anime}: {anime: Anime}) => {
 
 function App() {
 	const [results, setResults] = useState<IMALSearchResult[]>([]);	
-	const seasonalAnime = useAnime(`http://localhost:3000/season`, {year: 2023, season: "spring"});
+	const seasonalAnime = useAnime(`http://localhost:8080/2023/winter`);
 	const seasonalAnimeRef = useRef<HTMLDivElement>(null);
 
 	const searchMAL = async (e: FormEvent) => {
@@ -85,7 +85,7 @@ function App() {
 			</section>
 
 			{/* Seasonal Manga Preview */}
-			<section>
+			{/* <section>
 				<h3 className='border-bottom'> { `${getSeason( new Date().getMonth() )} ${new Date().getFullYear()} Anime` } </h3>
 				<h5> Trending Manga:</h5>
 				<div className='row'>
@@ -95,7 +95,7 @@ function App() {
 					</div>
 					<button tabIndex={0} className='scroll-button interactable' onClick={() => scrollLeft('right')}> <FaChevronRight /> </button>
 				</div>
-			</section>
+			</section> */}
 		</main>
 	</>)
 }
