@@ -69,5 +69,24 @@ func main() {
 		c.JSON(http.StatusOK, data)
 	})
 
+	r.GET("/manga/top", func(c *gin.Context) {
+
+		url := "https://api.myanimelist.net/v2/manga/ranking?limit=25&fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list,num_volumes,num_chapters,authors"
+		resp := request(MALclient, url)
+		defer resp.Body.Close()
+
+		var data anime.Anime
+
+		if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
+			log.Fatal(err)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+		}
+
+		c.JSON(http.StatusOK, data)
+
+	})
+
 	r.Run(":8080")
 }
