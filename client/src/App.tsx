@@ -11,7 +11,7 @@ import sortBy from './util/sortBy';
 
 const headers = {'Content-Type': 'application/json'};
 
-const AnimeCard = ({anime}: {anime: Anime}) => {
+const AnimeCard = ({anime, ref}: {anime: Anime, ref?: any}) => {	
 	return (
 		<Card>
 			<img src={anime.main_picture.large} alt="" />
@@ -26,37 +26,34 @@ const AnimeCard = ({anime}: {anime: Anime}) => {
 		</Card>
 )}
 
+let interval: number | null;
+
 function App() {
-	const [results, setResults] = useState<IMALSearchResult[]>([]);	
-	const seasonalAnime = useAnime(`http://localhost:8080/2023/spring`);
+	
+	const seasonalAnime = sortBy(useAnime(`http://localhost:8080/2023/spring`), 'rank');
 	const topManga = useAnime(`http://localhost:8080/manga/top`);
+	
 	const seasonalAnimeRef = useRef<HTMLDivElement>(null);
 	const topMangaRef = useRef<HTMLDivElement>(null);
 
-	const searchMAL = async (e: FormEvent) => {
-		e.preventDefault()
 
-		const request = await fetch(`http://localhost:3000/season`, {
-			method: 'post', 
-			body: JSON.stringify({year: 2023, season: "winter"}), 
-			headers: headers
-		})
+	function scrollHorizontal(current: HTMLDivElement | null, direction: 'left' | 'right'): void {
+		if (!current) return
+		console.debug("scrolling", interval)
 
-		const json = await request.json();
-
-		const {data, error, isLoading} = json;
-
-		if (error) console.error(error);
-		if (isLoading) console.log('Loading...');
-
-		setResults( () => data.map( (result: {node: IMALSearchResult}) => new Anime(result.node)));
+		if (!interval) {
+			interval = setInterval( () => {
+				console.debug("scrolling", interval)
+				current.scrollLeft +=  direction == 'right' ? 500 : -500;
+			}, 100)		
+		}
 	}
 
-	function scrollLeft(ref: HTMLDivElement | null, direction: 'left' | 'right') {
-		if (!ref) return;
-		direction === 'right' 
-			? ref.scrollLeft += 1000 
-			: ref.scrollLeft -= 1000;
+	function handleClickRelease() {
+		console.debug("mouse up")
+		if (!interval) return;
+		clearInterval(interval);
+		interval = null;
 	}
 
 	return (<>
@@ -77,16 +74,16 @@ function App() {
 				<h3 className='border-bottom'> { `${getSeason( new Date().getMonth() )} ${new Date().getFullYear()} Anime` } </h3>
 				<h5> Simulcast airing right now:</h5>
 				<div className='row'>
-					<button tabIndex={0} className='scroll-button interactable' onClick={() => scrollLeft(seasonalAnimeRef.current, 'left')}> <FaChevronLeft /> </button>
-					<div className='scroll-horizontal' ref={seasonalAnimeRef}>	
-						{ seasonalAnime && sortBy(seasonalAnime, 'rank').map( (anime: Anime) => <AnimeCard anime={anime} key={anime.id} /> ) }
+					<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onMouseDown={() => scrollHorizontal(seasonalAnimeRef.current, 'left')}> <FaChevronLeft /> </button>
+					<div className='scroll-horizontal' ref={seasonalAnimeRef} style={{ scrollSnapAlign: 'start' }}>	
+						{ seasonalAnime.map( (anime: Anime) => <AnimeCard anime={anime} key={anime.id} /> ) }
 					</div>
-					<button tabIndex={0} className='scroll-button interactable' onClick={() => scrollLeft(seasonalAnimeRef.current, 'right')}> <FaChevronRight /> </button>
+					<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onMouseDown={() => scrollHorizontal(seasonalAnimeRef.current, 'right')}> <FaChevronRight /> </button>
 				</div>
 			</section>
 
 			{/* Seasonal Manga Preview */}
-			<section>
+			{/* <section>
 				<h3 className='border-bottom'> { `Top Manga According to MAL Users` } </h3>
 				<h5> Top Manga of All Time:</h5>
 				<div className='row'>
@@ -96,7 +93,7 @@ function App() {
 					</div>
 					<button tabIndex={0} className='scroll-button interactable' onClick={() => scrollLeft(topMangaRef.current, 'right')}> <FaChevronRight /> </button>
 				</div>
-			</section>
+			</section> */}
 		</main>
 	</>)
 }
