@@ -12,29 +12,27 @@ import Manga from './types/Manga';
 
 function App() {
 	const anime = useAnime( `http://localhost:8080/2023/spring` );
-	// const [activeGenres, setActiveGenres] = useState<string[]>([]);
+	const [activeGenres, setActiveGenres] = useState<string[]>([]);
 	
-	// const [inactiveGenres, setInactiveGenres] = useState<string[]>([
-	// 	"Action", "Adventure", "Avant Garde", "Boys Love",
-	// 	"Comedy", "Drama", "Fantasy", "Girls Love",
-	// 	"Gourmet", "Horror", "Mystery", "Romance",
-	// 	"Sci-Fi", "Slice of Life", "Sports", "Supernatural",
-	// 	"Suspense",  
-	// ]);
+	const [inactiveGenres, setInactiveGenres] = useState<string[]>([
+		"Action", "Adventure", "Avant Garde", "Boys Love",
+		"Comedy", "Drama", "Fantasy", "Girls Love",
+		"Gourmet", "Horror", "Mystery", "Romance",
+		"Sci-Fi", "Slice of Life", "Sports", "Supernatural",
+		"Suspense",  
+	]);
 
-	// const activateGenre = (index: number) => {
-	// 	const genre = inactiveGenres.slice(index, index+1)[0];
-	// 	setInactiveGenres([...inactiveGenres]);
-	// 	setActiveGenres([...activeGenres, genre])
-	// 	console.debug(genre);
-	// }
+	const activateGenre = (index: number) => {
+		const genre = inactiveGenres.slice(index, index+1)[0];
+		setInactiveGenres([...inactiveGenres.slice(0, index), ...inactiveGenres.slice(index+1, inactiveGenres.length)]);
+		setActiveGenres([...activeGenres, genre])
+	}
 
-	// const deactivateGenre = (index: number) => {
-	// 	const genre = activeGenres.slice(index, index+1)[0];
-	// 	setActiveGenres([...activeGenres]);
-	// 	setInactiveGenres([...inactiveGenres, genre])
-	// 	console.debug(genre);
-	// }
+	const deactivateGenre = (index: number) => {
+		const genre = activeGenres.slice(index, index+1)[0];
+		setActiveGenres([...activeGenres.slice(0, index), ...activeGenres.slice(index+1, activeGenres.length)]);
+		setInactiveGenres([...inactiveGenres, genre])
+	}
 
 	return (<>
 		<header>
@@ -72,7 +70,7 @@ function App() {
 
 					<div className='genre-filters'>
 						<h3> Genres </h3>
-						{/* <div>
+						<div>
 							<div className='pane active-genres'>
 							{
 								activeGenres.map( (genre, index) => <button onClick={()=>deactivateGenre(index)} className='genre-button'> {genre} </button>)
@@ -83,7 +81,7 @@ function App() {
 								inactiveGenres.map( (genre, index) => <button onClick={()=>activateGenre(index)} className='genre-button'> {genre} </button>)
 							}
 							</div>
-						</div> */}
+						</div>
 					</div>
 				</aside>
 
