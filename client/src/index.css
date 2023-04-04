@@ -65,8 +65,10 @@ button {
   background-color: transparent;
 }
 
-header {width: 100%;   background-color: var(--accent-500);
+header {
+  width: 100%;   background-color: var(--accent-500);
 }
+
 nav {
   max-width: 1240px;
   margin: 0 auto;
@@ -129,7 +131,6 @@ section {
 }
 
 .card-content > p {
-  height: 150px;
   text-align: start;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -139,7 +140,8 @@ section {
 
 .card img {
   min-width: 100%;
-  max-height: 200px;
+  max-width: 100%;
+  height: 200px;
   outline: var(--accent-500) 0.125rem solid;
 }
 
@@ -164,21 +166,21 @@ section {
 }
 
 .scroll-horizontal {
-  margin: 0 2rem;
   display: flex;
-  gap: 1rem;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  -ms-overflow-style: none;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  justify-content: start;
+  scroll-snap-align: none center;
+  scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
+  overflow-x: scroll;
+  margin: 1rem 0;
+
+  -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS devices */
 }
 
-.interactable {
-  cursor: pointer;
-}
-
-.interactable:focus-visible {
-  outline: var(--accent-100) 0.5rem solid;
+.scroll-horizontal > .card {
+  scroll-snap-align: none center;
 }
 
 .scroll-button {
@@ -188,4 +190,12 @@ section {
   display: flex;
   align-items: center;
   background-color: var(--accent-500);
+}
+
+.interactable {
+  cursor: pointer;
+}
+
+.interactable:focus-visible {
+  outline: var(--accent-100) 0.5rem solid;
 }
