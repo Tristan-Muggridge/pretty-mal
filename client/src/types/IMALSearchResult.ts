@@ -1,3 +1,37 @@
+export enum NSFW {
+	"white" = "white",
+	"grey" = "grey",
+	"black" = "black"
+}
+
+export enum MangaMediaType {
+    unknown = "unknown",
+    manga = "manga",
+    novel = "novel",
+    oneShot = "oneShot",
+    doujinshi = "doujinshi",
+    manhwa = "manhwa",
+    manhua = "manhua",
+    oel = "oel"
+}
+
+export enum AnimeMediaType {
+	unknown = "unknown",
+	tv = "tv",
+	ova = "ova",
+	movie = "movie",
+	special = "special",
+	ona = "ona",
+	music = "music",
+}
+
+export interface IAuthor {
+	id: number;
+	first_name: string;
+	last_name: string;
+	role: string;
+}
+
 export interface IMain_Picture {
 	large: string;
 	medium: string;
@@ -38,17 +72,27 @@ export default interface IMALSearchResult {
 	num_list_users: number,
 	num_scoring_users: number,
 	nsfw: string,
+	genres: IGenre[],
+	status: string,
+	my_list_status: string,
 	created_at: string,
 	updated_at: string,
-	media_type: string,
-	status: string,
-	genres: IGenre[],
-	my_list_status: string,
+}
+
+export interface IMALAnime extends IMALSearchResult {
+	source: string,
+	average_episode_duration: number,
+	studios: IStudio,
+	media_type: AnimeMediaType,
 	num_episodes: number,
 	start_season: string,
 	broadcast: IBroadcast,
-	source: string,
-	average_episode_duration: number,
 	rating: string,
-	studios: IStudio,
+}
+
+export interface IMALManga extends IMALSearchResult {
+	media_type: MangaMediaType,
+	num_volumes: number,
+	num_chapters: number,
+	authors: IAuthor[],
 }
