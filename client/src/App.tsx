@@ -5,11 +5,10 @@ import Card from './Card';
 import useAnime from './hooks/useAnime';
 
 import Anime from './types/Anime';
-import IMALSearchResult from './types/IMALSearchResult'
 import { getSeason } from './types/Seasons';
 import sortBy from './util/sortBy';
-
-const headers = {'Content-Type': 'application/json'};
+import useManga from './hooks/useManga';
+import Manga from './types/Manga';
 
 const AnimeCard = ({anime, ref}: {anime: Anime, ref?: any}) => {	
 	return (
@@ -17,7 +16,7 @@ const AnimeCard = ({anime, ref}: {anime: Anime, ref?: any}) => {
 			<img src={anime.main_picture.large} alt="" />
 			
 			<div className='card-content'>
-				<span><FaStar className='stars'/> {anime.score} </span>
+				<span><FaStar className='stars'/> {anime.mean} </span>
 				<h4> {anime.title.slice(0,20)}{anime.title.length > 21 ? '...': ''} </h4>
 			</div>
 
@@ -26,12 +25,23 @@ const AnimeCard = ({anime, ref}: {anime: Anime, ref?: any}) => {
 		</Card>
 )}
 
+const MangaCard = ({manga, ref}: {manga: Manga, ref?: any}) => {
+	return (
+		<Card>
+			<div className='card-content'>
+				<img src={manga.main_picture.large} alt="" />
+				<h4> {manga.title} </h4>
+			</div>
+		</Card>
+	)
+}
+
 let interval: number | null;
 
 function App() {
 	
 	const seasonalAnime = sortBy(useAnime(`http://localhost:8080/2023/spring`), 'rank');
-	const topManga = useAnime(`http://localhost:8080/manga/top`);
+	const topManga = useManga(`http://localhost:8080/manga/top`);
 	
 	const seasonalAnimeRef = useRef<HTMLDivElement>(null);
 	const topMangaRef = useRef<HTMLDivElement>(null);
@@ -39,8 +49,6 @@ function App() {
 
 	function scrollHorizontal(current: HTMLDivElement | null, direction: 'left' | 'right'): void {
 		if (!current) return
-		console.debug("scrolling", interval)
-
 		if (!interval) {
 			interval = setInterval( () => {
 				console.debug("scrolling", interval)
@@ -50,7 +58,6 @@ function App() {
 	}
 
 	function handleClickRelease() {
-		console.debug("mouse up")
 		if (!interval) return;
 		clearInterval(interval);
 		interval = null;
@@ -59,8 +66,13 @@ function App() {
 	return (<>
 		<header>
 			<nav>
-				<i>OurAnimeList</i>
+				<i className='nav-title'>OurAnimeList</i>
 				<div>
+					<ul className='nav-shortcuts'>
+						<li className='active'>Movies</li>
+						<li>Shows</li>
+						<li>Manga</li>
+					</ul>
 					<FaList />
 					Username
 					<FaUser /> 
@@ -83,17 +95,17 @@ function App() {
 			</section>
 
 			{/* Seasonal Manga Preview */}
-			{/* <section>
-				<h3 className='border-bottom'> { `Top Manga According to MAL Users` } </h3>
-				<h5> Top Manga of All Time:</h5>
+			<section>
+				<h3 className='border-bottom'> Top Manga </h3>
+				<h5> Top Manga According to MAL Users:</h5>
 				<div className='row'>
-					<button tabIndex={0} className='scroll-button interactable' onClick={() => scrollLeft(topMangaRef.current, 'left')}> <FaChevronLeft /> </button>
+					<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onClick={() => scrollHorizontal(topMangaRef.current, 'left')}> <FaChevronLeft /> </button>
 					<div className='scroll-horizontal' ref={topMangaRef}>	
-						{ topManga && sortBy(topManga, 'rank').map( (manga: Anime) => <AnimeCard anime={manga} key={manga.id} /> ) }
+						{ topManga && sortBy(topManga, 'rank').map( (manga: Manga) => <MangaCard manga={manga} key={manga.id} /> ) }
 					</div>
-					<button tabIndex={0} className='scroll-button interactable' onClick={() => scrollLeft(topMangaRef.current, 'right')}> <FaChevronRight /> </button>
+					<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onClick={() => scrollHorizontal(topMangaRef.current, 'right')}> <FaChevronRight /> </button>
 				</div>
-			</section> */}
+			</section>
 		</main>
 	</>)
 }

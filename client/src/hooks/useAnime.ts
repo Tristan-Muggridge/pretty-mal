@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Anime from "../types/Anime";
-import IMALSearchResult from "../types/IMALSearchResult";
+import IMALSearchResult, { IMALAnime } from "../types/IMALSearchResult";
 import { getSeason } from "../types/Seasons";
 
 const headers = {'Content-Type': 'application/json'};
@@ -40,7 +40,7 @@ export default function useAnime(url: string, body: object | undefined = undefin
                 return;
             }
 
-            const animeArray = data.map( (result: {node: IMALSearchResult}) => new Anime(result.node));
+            const animeArray = data.map( (result: {node: IMALAnime}) => new Anime(result.node));
 
             // create a TTL for the anime set to 1 minute from now
             localStorage.setItem('anime', JSON.stringify({anime: animeArray, TTL: Date.now() + 60000}));
