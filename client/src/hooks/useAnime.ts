@@ -14,7 +14,7 @@ export default function useAnime(url: string, body: object | undefined = undefin
         const search = async () => {
             
             // check if the anime is in local storage
-            const animeFromLocalStorage = localStorage.getItem('anime');
+            const animeFromLocalStorage = localStorage.getItem(url);
             if (animeFromLocalStorage) {
                 console.debug('Anime found in local storage')
                 console.debug('expires in ' + (JSON.parse(animeFromLocalStorage).TTL - Date.now()) + 'ms')
@@ -43,7 +43,7 @@ export default function useAnime(url: string, body: object | undefined = undefin
             const animeArray = data.map( (result: {node: IMALAnime}) => new Anime(result.node));
 
             // create a TTL for the anime set to 1 minute from now
-            localStorage.setItem('anime', JSON.stringify({anime: animeArray, TTL: Date.now() + 60000}));
+            localStorage.setItem(url, JSON.stringify({anime: animeArray, TTL: Date.now() + 60000}));
             setAnime(animeArray)
         }
 
