@@ -18,6 +18,8 @@
   --accent-500: rgb(118, 159, 205);
   --yellow: rgb(255, 221, 108);
 
+  --max-width: 1200px;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.25;
   font-weight: 400;
@@ -31,202 +33,196 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-}
 
-button {
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  margin: 0 0.5rem 0.5rem 0.5rem;
-  color: var(--white);
-  background-color: var(--accent-500);
-  font-weight: 600;
-}
-
-.btn-dark {
-  color: var(--white);
-  background-color: var(--accent-500);
-}
-.btn-dark:hover {
-  color: var(--white);
-  background-color: var(--accent-300);
-}
-
-.btn-light {
-  color: var(--accent-500);
-  background-color: var(--white);
-}
-.btn-light:hover {
-  color: var(--white);
-  background-color: var(--accent-300);
-}
-
-.transparent {
-  background-color: transparent;
+  overflow: hidden;
 }
 
 header {
-  width: 100%;   background-color: var(--accent-500);
+  background-color: var(--accent-500);
+  color: var(--white);
+  padding: 1rem;
 }
 
 nav {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  max-width: var(--max-width);
+  margin-inline: auto;
   display: flex;
-  justify-content: space-between;
-  color: var(--white);
-  padding: 1rem;
+  align-items: center;
+}
 
-  margin-bottom: 2rem;
+@media (max-width: 768px) {
+  nav {
+    display: none;
+  }
 }
 
 .nav-title {
-  flex: 1;
+  flex: 1 1 10ch;
+}
+
+.nav-user {
+  flex: 1 1 20%;
+  gap: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: end;
 }
 
 .nav-shortcuts {
+  flex: 1 1 40%;
   display: flex;
-  position: relative;
-  flex: 2;
-  align-items: center;
   gap: 1rem;
-
   list-style: none;
 }
 
-.active::after {
-  position: absolute;
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  background-color: var(--white);
-
-  bottom: 0;
-  left: 0;
-
-  transform: translateY(-50%);
-}
-
-nav div {
-  flex: 3;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
 
 main {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  /* max-width: var(--max-width); */
+  margin-inline: auto;
+  overflow: hidden;
 }
 
-section {
-  width: 100%;
-}
-
-.row {
+.layout {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 2rem auto;
+  flex-wrap: wrap;
 }
 
-.custom-scroll {
-  overflow-y: scroll;
-  overflow-x: hidden;
+.layout aside {
+  flex: 1 1 20%;
+  background-color: #333;
 }
 
-.border-bottom { border-bottom: 1px solid var(--accent-500); }
-
-.card {
-  text-align: center;
-  border-radius: 0.5rem;
-  border: 0.125rem solid var(--accent-500);
-
+aside {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: calc(100vh - 3rem);
+  padding: 2rem 0;
 }
 
-.card-content h4 {
-  text-align: center;
-  vertical-align: middle;
-  margin: auto auto;
-  width: 130px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-overflow: ellipsis;
-}
+.pane {
+  margin: 1rem 0.5rem;
+  background-color: #666;
 
-.card-content > p {
-  text-align: start;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  overflow-y: auto;
-  padding: 0 1rem;
-}
-
-.card img {
-  min-width: 100%;
-  max-width: 100%;
-  height: 200px;
-  outline: var(--accent-500) 0.125rem solid;
-}
-
-.stars {
-  color: var(--yellow);
-}
-
-.genres {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.1rem;
-}
-
-.tag {
-  display: inline-block;
-  padding: 0.25rem 0.5rem;
-  margin: 0 0.25rem;
-  border-radius: 0.25rem;
-  background-color: var(--accent-500);
-  color: var(--white);
-}
-
-.scroll-horizontal {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem 0;
-  justify-content: start;
-  scroll-snap-align: none center;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  overflow-x: scroll;
-  margin: 1rem 0;
-
-  -webkit-overflow-scrolling: touch; /* for smooth scrolling on iOS devices */
-}
-
-.scroll-horizontal > .card {
-  scroll-snap-align: none center;
-}
-
-.scroll-button {
-  height: 20px;
-  padding: 2rem 0.5rem;
+  padding: 1rem;
   border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
-  background-color: var(--accent-500);
 }
 
-.interactable {
+.genre-button {
+  padding: 0.5rem;
+  margin: 0.125rem;
+  background-color: var(--accent-500);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  border: transparent;
+}
+
+.genre-button:hover {
+  background-color: var(--accent-100);
+  color: var(--accent-500)
+}
+
+.layout .content {
+  flex: 1 1 80%;
+
+  background-color: var(--accent-300);
+  overflow-y: scroll;
+  height: 100vh;
+  padding: 4rem;
+}
+
+.even-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.even-columns {
+  flex-grow: 1
+}
+
+.card {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.anime-card {
+  position: relative;
+  color:rgb(247, 251, 252);
+  overflow: hidden;
+  background-color: transparent;
+
+  max-width: 400px;
+  max-height: 200px
+}
+
+.anime-card .title {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.anime-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 1rem;
+  object-position: 0px -150px;
+}
+
+.play-button {
+  border-radius: 50%;
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
   cursor: pointer;
 }
 
-.interactable:focus-visible {
-  outline: var(--accent-100) 0.5rem solid;
+.play-button:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.anime-card-content {
+  position: absolute;
+  display: flex;
+  gap: 1rem;
+
+  justify-content: space-around;
+  vertical-align: middle;
+  align-items: center;
+  
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  min-height: 20%;
+
+  padding: 1rem;
+
+  backdrop-filter: blur(20px) brightness(100%) opacity(0.9);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.anime-card-content > :nth-child(1) {
+  flex: 1 1 1ch;
+}
+.anime-card-content > :nth-child(2) {
+  flex: 2 1 20ch;
+}
+.anime-card-content > :nth-child(3) {
+  flex: 1 1 auto;
+}
+
+.rating {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 0.25rem 1rem;
 }

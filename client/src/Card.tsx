@@ -1,6 +1,6 @@
-export default function Card ( {children, style}: {children: React.ReactNode[] | React.ReactNode, style?: any}) {
+export default function Card ( {children, variant}: {children: React.ReactNode[] | React.ReactNode, variant?: any}) {
     return (
-        <div className='card' style={style ?? {}}>
+        <div className={`card`}>
             {children}
         </div>
     )
