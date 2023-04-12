@@ -35,8 +35,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-
-  overflow: hidden;
 }
 
 h3, h4, h2 {
@@ -90,11 +88,12 @@ nav {
 main {
   /* max-width: var(--max-width); */
   margin-inline: auto;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .layout {
   display: flex;
+
   flex-wrap: wrap;
 }
 
@@ -104,14 +103,12 @@ main {
 }
 
 aside {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: calc(100vh - 3rem);
   padding: 2rem 0;
 }
 
 aside > div {
+  position: static;
+  top: 0;
   margin: 1rem;
 }
 
@@ -144,29 +141,62 @@ button {
   background-color: var(--neutral-300)
 }
 
+/* LAYOUT */
+
 .layout .content {
   flex: 1 1 80%;
 
   background-color: var(--neutral-300);
   overflow-y: scroll;
-  height: 100vh;
-  padding: 4rem;
+  min-height: 100vh;
+  padding: 1rem 4rem;
   margin-inline: auto;
 }
 
-.even-columns {
+/* .even-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 1rem;
   place-items: center;
-}
+} */
 
 .even-columns {
-  flex-grow: 1
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
 }
 
+.even-columns > * {
+  flex: 1 1 300px;
+}
+
+/* SECTION */
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin: 1rem 0;
+  color:rgb(247, 251, 252);
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.section-header a {
+  cursor: pointer;
+}
+
+.section-header a:hover {
+  text-decoration: underline;
+}
+
+/* CARDS */
+
 .card {
-  width: 100%;
   border-radius: 1rem;
   overflow: hidden;
 }
@@ -191,7 +221,7 @@ button {
   height: 100%;
   object-fit: cover;
   border-radius: 1rem;
-  object-position: 0px -150px;
+  object-position: 0 -10em;
 }
 
 .play-button {

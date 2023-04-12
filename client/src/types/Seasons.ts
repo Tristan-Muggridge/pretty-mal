@@ -1,8 +1,8 @@
 enum Seasons {
-	"spring" = "Spring",
-	"summer" = "Summer",
-	"fall" = "Fall",
-	"winter" = "Winter"
+	"spring" = "spring",
+	"summer" = "summer",
+	"fall" = "fall",
+	"winter" = "winter"
 }
 
 export function getSeason(month: number) {

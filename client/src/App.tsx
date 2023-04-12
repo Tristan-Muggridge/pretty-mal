@@ -11,7 +11,7 @@ import useManga from './hooks/useManga';
 import Manga from './types/Manga';
 
 function App() {
-	const anime = sortBy(useAnime( `http://localhost:8080/2023/spring` ), 'num_list_users', 'desc');
+	const anime = sortBy(useAnime( `http://localhost:8080/2023/spring?preview=true` ), 'num_list_users', 'desc');
 	const [activeGenres, setActiveGenres] = useState<string[]>([]);
 	
 	const [inactiveGenres, setInactiveGenres] = useState<string[]>([
@@ -52,10 +52,25 @@ function App() {
 		</header>
 
 		<main>
-			
 			<div className="layout">
 
 				<aside>
+					{/* <div className='genre-filters'>
+						<h3> Genres </h3>
+						<div>
+							<div className='pane'>
+							{
+								activeGenres.map( (genre, index) => <button onClick={()=>deactivateGenre(index)} className='toggled'> {genre} </button>)
+							}
+							</div>
+							<div className='pane'>
+							{
+								inactiveGenres.map( (genre, index) => <button onClick={()=>activateGenre(index)} className='untoggled'> {genre} </button>)
+							}
+							</div>
+						</div>
+					</div> */}
+
 					<div className='news'>
 						<h3> News </h3>
 						<div className='pane'>
@@ -76,26 +91,10 @@ function App() {
 							</div>
 						</div>
 					</div>
-
-					<div className='genre-filters'>
-						<h3> Genres </h3>
-						<div>
-							<div className='pane'>
-							{
-								activeGenres.map( (genre, index) => <button onClick={()=>deactivateGenre(index)} className='toggled'> {genre} </button>)
-							}
-							</div>
-							<div className='pane'>
-							{
-								inactiveGenres.map( (genre, index) => <button onClick={()=>activateGenre(index)} className='untoggled'> {genre} </button>)
-							}
-							</div>
-						</div>
-					</div>
 				</aside>
 
 				<div className="content">
-					<h2> Continue Watching </h2>
+					<SectionHeader heading={"Continue Watching"}/>
 					<section className='continue-watching even-columns'>
 						<div className="card">
 							<div className="anime-card">
@@ -114,8 +113,17 @@ function App() {
 							</div>
 						</div>
 					</section>
-					<h2> Top Anime of All Time </h2>
-					<section className='continue-watching even-columns'>
+
+					<SectionHeader heading={"Current Simulcasts"}/>
+					<section className='even-columns'>
+					{
+						SeasonalAnime()
+					}
+					</section>
+					
+					<SectionHeader heading={"Top Anime of All Time"}/>
+
+					<section className='even-columns'>
 					{	
 						TopAnime()
 					}
@@ -129,8 +137,32 @@ function App() {
 
 export default App
 
+const SectionHeader = ({heading}: {heading: string}) => {
+
+	return (
+		<div className='section-header'>
+			<h2> {heading} </h2>
+			<a> See More... </a>
+		</div>
+	)
+
+}
+
+const SeasonalAnime = () => {
+	const today = new Date();
+	const seasonalAnime = useAnime( `http://localhost:8080/${today.getFullYear()}/${getSeason(today.getMonth()+1)}?preview=true` );
+
+	return (
+		<>
+			{
+				seasonalAnime.map( (anime: Anime) => <AnimeCard anime={anime} key={'seasonal-'+anime.id} /> )
+			}
+		</>
+	)
+}
+
 const TopAnime = () => {
-	const topAnime = sortBy(useAnime( `http://localhost:8080/anime/top` ), 'rank', 'desc');
+	const topAnime = sortBy(useAnime( `http://localhost:8080/anime/top?preview=true` ), 'rank', 'desc');
 	return (
 		<>
 		{
@@ -141,33 +173,6 @@ const TopAnime = () => {
 	
 
 }
-
-// const cuttingRoom = () => {
-// 		{/* Seasonal Anime Preview */}
-// 		<section>
-// 			<h3 className='border-bottom'> { `${getSeason( new Date().getMonth() )} ${new Date().getFullYear()} Anime` } </h3>
-// 			<h5> Simulcast airing right now:</h5>
-// 			<div className='row'>
-// 				<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onMouseDown={() => scrollHorizontal(seasonalAnimeRef.current, 'left')}> <FaChevronLeft /> </button>
-// 				<div className='scroll-horizontal' ref={seasonalAnimeRef} style={{ scrollSnapAlign: 'start' }}>	
-// 					{ seasonalAnime.map( (anime: Anime) => <AnimeCard anime={anime} key={anime.id} /> ) }
-// 				</div>
-// 				<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onMouseDown={() => scrollHorizontal(seasonalAnimeRef.current, 'right')}> <FaChevronRight /> </button>
-// 			</div>
-// 		</section>
-
-// 		{/* Seasonal Manga Preview */}
-// 		<section>
-// 			<h3 className='border-bottom'> Top Manga </h3>
-// 			<h5> Top Manga According to MAL Users:</h5>
-// 			<div className='row'>
-// 				<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onClick={() => scrollHorizontal(topMangaRef.current, 'left')}> <FaChevronLeft /> </button>
-// 				<div className='scroll-horizontal' ref={topMangaRef}>	
-// 					{ topManga && sortBy(topManga, 'rank').map( (manga: Manga) => <MangaCard manga={manga} key={manga.id} /> ) }
-// 				</div>
-// 				<button tabIndex={0} className='scroll-button interactable' onMouseUp={handleClickRelease} onClick={() => scrollHorizontal(topMangaRef.current, 'right')}> <FaChevronRight /> </button>
-// 			</div>
-// 		</section>
 
 const AnimeCard = ({anime, ref}: {anime: Anime, ref?: any}) => {	
 	return (
@@ -182,40 +187,3 @@ const AnimeCard = ({anime, ref}: {anime: Anime, ref?: any}) => {
 			</div>
 		</Card>
 )}
-
-// const MangaCard = ({manga, ref}: {manga: Manga, ref?: any}) => {
-// 	return (
-// 		<Card>
-// 			<div className='card-content'>
-// 				<img src={manga.main_picture.large} alt="" />
-// 				<h4> {manga.title} </h4>
-// 			</div>
-// 		</Card>
-// 	)
-// }
-
-// const seasonalAnime = sortBy(useAnime(`http://localhost:8080/2023/spring`), 'rank');
-// const topManga = useManga(`http://localhost:8080/manga/top`);
-
-// const seasonalAnimeRef = useRef<HTMLDivElement>(null);
-// const topMangaRef = useRef<HTMLDivElement>(null);
-
-
-// function scrollHorizontal(current: HTMLDivElement | null, direction: 'left' | 'right'): void {
-// 	if (!current) return
-// 	if (!interval) {
-// 		interval = setInterval( () => {
-// 			console.debug("scrolling", interval)
-// 			current.scrollLeft +=  direction == 'right' ? 500 : -500;
-// 		}, 100)		
-// 	}
-// }
-
-// function handleClickRelease() {
-// 	if (!interval) return;
-// 	clearInterval(interval);
-// 	interval = null;
-// }
-
-
-// }

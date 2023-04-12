@@ -40,6 +40,7 @@ export default function useAnime(url: string, body: object | undefined = undefin
                 return;
             }
 
+            console.debug(data, url)
             const animeArray = data.map( (result: {node: IMALAnime}) => new Anime(result.node));
 
             // create a TTL for the anime set to 1 minute from now
