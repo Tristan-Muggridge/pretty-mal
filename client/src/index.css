@@ -5,17 +5,11 @@
 }
 
 :root {
-  /* --color-primary: rgb(239, 239, 239);
-  --color-primary-light: #F2F4F3;
-  --color-primary-dark: #0A0908;
-
-  --color-secondary-light: #A9927D;
-  --color-secondary-dark: #5E503F; */
-
   --white: rgb(247, 251, 252);
   --neutral-100: rgb(100, 100, 100);
-  --neutral-300: rgb(60, 60, 60);
-  --neutral-500: rgb(44, 44, 44);
+  --neutral-25: rgb(25, 25, 25);
+  --neutral-20: rgb(20, 20, 20);
+  --neutral-10: rgb(10, 10, 10);
   --yellow: rgb(255, 221, 108);
 
   --accent-500: rgb(97, 160, 255);
@@ -27,7 +21,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: black;
+  color: var(--white);
   background-color: var(--white);
 
   font-synthesis: none;
@@ -47,9 +41,10 @@ h2 {
 }
 
 header {
-  background-color: var(--neutral-500);
+  background-color: var(--neutral-20);
   color: var(--white);
   padding: 1rem;
+  border-bottom: 1px solid var(--neutral-10);
 }
 
 nav {
@@ -78,17 +73,16 @@ nav {
 }
 
 .nav-shortcuts {
-  flex: 1 1 40%;
+  flex: 1 1 300px;
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   list-style: none;
 }
 
 
 main {
-  /* max-width: var(--max-width); */
   margin-inline: auto;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 .layout {
@@ -99,7 +93,7 @@ main {
 
 .layout aside {
   flex: 1 1 20%;
-  background-color: #333;
+  background-color: var(--neutral-25);
 }
 
 aside {
@@ -118,6 +112,8 @@ aside > div {
 
   padding: 1rem;
   border-radius: 0.5rem;
+
+  color: var(--neutral-10);
 }
 
 button {
@@ -134,11 +130,11 @@ button {
 
 .toggled:hover {
   background-color: var(--neutral-100);
-  color: var(--neutral-500)
+  color: var(--neutral-10)
 }
 
 .untoggled {
-  background-color: var(--neutral-300)
+  background-color: var(--neutral-20)
 }
 
 /* LAYOUT */
@@ -146,19 +142,12 @@ button {
 .layout .content {
   flex: 1 1 80%;
 
-  background-color: var(--neutral-300);
-  overflow-y: scroll;
+  background-color: var(--neutral-20);
+  overflow-y: hidden;
   min-height: 100vh;
   padding: 1rem 4rem;
   margin-inline: auto;
 }
-
-/* .even-columns {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 1rem;
-  place-items: center;
-} */
 
 .even-columns {
   display: flex;
